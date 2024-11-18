@@ -235,7 +235,7 @@ class BiRefNet_Lite:
                     if hasattr(model_class, "_no_split_modules"):
                         delattr(model_class, "_no_split_modules")
                     
-                birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True)
+                birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True, **spare_params)
             else:
                 birefnet = AutoModelForImageSegmentation.from_pretrained(
                     "ZhengPeng7/BiRefNet", trust_remote_code=True
