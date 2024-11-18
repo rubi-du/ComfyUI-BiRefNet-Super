@@ -232,8 +232,11 @@ class BiRefNet_Lite:
                     spare_params['max_memory'] = {0: f"{max_gpu_size}GiB", "cpu": f"{cpu_size}GiB"}
                     setattr(model_class, '_no_split_modules', ["Decoder", "SwinTransformer"])
                 else:
-                    if hasattr(model_class, "_no_split_modules"):
-                        delattr(model_class, "_no_split_modules")
+                    try:
+                        if hasattr(model_class, "_no_split_modules"):
+                            delattr(model_class, "_no_split_modules")
+                    except Exception as e:
+                        print('No need to delete:', e)
                     
                 birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True, **spare_params)
             else:
