@@ -229,7 +229,7 @@ class BiRefNet_Lite:
                 )
                 if cpu_size > 0 and device == 'cuda':
                     spare_params['device_map'] = 'auto'
-                    spare_params['max_memory'] = {0: "${max_gpu_size}GiB", "cpu": "${cpu_size}GiB"}
+                    spare_params['max_memory'] = {0: f"{max_gpu_size}GiB", "cpu": f"{cpu_size}GiB"}
                     setattr(model_class, '_no_split_modules', ["Decoder", "SwinTransformer"])
                 else:
                     if hasattr(model_class, "_no_split_modules"):
