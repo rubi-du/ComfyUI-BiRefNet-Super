@@ -38,7 +38,7 @@ Install via ComfyUI-Manager by searching for "ComfyUI-BiRefNet-lite".
   
 Example workflows are placed in `ComfyUI-BiRefNet-lite/workflow`.<br/>  
   
-There are two ways to load models: one is to automatically download and load a remote model, and the other is to load a local model. To load a local model, set `load_local_model` to true and `local_model_path` to the location of the local model, e.g., `H:\ZhengPeng7\BiRefNet`.<br/>  
+There are two options for loading models: one is to automatically download and load a remote model, and the other is to load a local model (in which case you need to set `load_local_model` to true and set `local_model_path` to the local model path under the models/birefnet directory, for example, the BiRefNet folder).<br/>  
   
 ![](./assets/9e6bf0f9-67a7-41ea-bc4b-d8352e4fac4a.png)  
 ___  

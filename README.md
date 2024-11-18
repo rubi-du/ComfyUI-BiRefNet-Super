@@ -39,7 +39,7 @@
 
 示例工作流放置在`ComfyUI-BiRefNet-lite/workflow`中<br/>
 
-加载模型支持两种方式，一种是自动下载远程模型并加载模型，另外一种是加载本地模型。加载本地模型的时候需要把load_local_model设置为true，并把local_model_path设置为本地模型所在路径，例如：H:\ZhengPeng7\BiRefNet<br/>
+加载模型有两种方式可选：一是自动下载并加载远程模型，二是加载本地模型（此时需将`load_local_model`设为true，并将`local_model_path`设置为指向models/birefnet目录下的本地模型路径，例如BiRefNet文件夹）<br/>
 
 ![](./assets/9e6bf0f9-67a7-41ea-bc4b-d8352e4fac4a.png)
 ___
