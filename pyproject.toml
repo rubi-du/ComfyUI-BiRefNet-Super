@@ -1,6 +1,6 @@
 [project]
 name = "comfyui-birefnet-lite"
-description = ""
+description = "This repository packages the latest BiRefNet model as a ComfyUI node for use, supporting chunked loading on both CPU and GPU, as well as model caching features."
 version = "1.0.0"
 license = {file = "LICENSE"}
 
@@ -8,7 +8,9 @@ license = {file = "LICENSE"}
 Repository = "https://github.com/rubi-du/ComfyUI-BiRefNet-lite"
 #  Used by Comfy Registry https://comfyregistry.org
 
+dependencies = ["numpy", "timm", "pymatting", "scikit-image","scipy"]
+
 [tool.comfy]
-PublisherId = ""
+PublisherId = "duhaifeng"
 DisplayName = "ComfyUI-BiRefNet-lite"
 Icon = ""
