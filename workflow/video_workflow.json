@@ -325,7 +325,7 @@
           }
         ],
         "properties": {
-          "Node name for S&R": "BiRefNet_Hugo"
+          "Node name for S&R": "BiRefNet_Lite"
         },
         "widgets_values": [
             true,
