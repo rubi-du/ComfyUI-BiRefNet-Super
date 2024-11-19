@@ -169,7 +169,7 @@ class BiRefNet_Lite:
                 "load_local_model": ("BOOLEAN", {"default": True}),
                 "device": (["auto", "cuda", "cpu", "mps", "xpu", "meta"],{"default": "auto"}),
                 "cutout_func": (["putalpha", "naive", "alpha_matting"],{"default": "putalpha"}),
-                "mask_precision_threshold": ("FLOAT", {"default": 0.1, "min": 0.0, "max": 0.0}),
+                "mask_precision_threshold": ("FLOAT", {"default": 0.1, "min": 0.0, "max": 1.0}),
                 "cached": ("BOOLEAN", {"default": True}),
                 "cpu_size": ("FLOAT",{"default": 0}),
                 "alpha_matting_foreground_threshold": ("INT", {"default": 240}),
