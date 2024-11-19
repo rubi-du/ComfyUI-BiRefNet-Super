@@ -16,8 +16,9 @@ Feature 2: Model Caching<br>
 Feature 3: Multiple Cropping Methods<br>  
 Supports putalpha, naive, and alpha_matting cropping methods.  
 ![slot](./assets/feature2.png)<br>  
-<br>  
   
+## News
+- Nov 19, 2023: Add `mask_precision_threshold` parameter to control the accuracy threshold of the mask, default to <br>
 ## Installation   
   
 #### Method 1:  

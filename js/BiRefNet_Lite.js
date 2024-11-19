@@ -81,8 +81,8 @@ app.registerExtension({
 				return;
 			}
 
-			if(node.widgets_values[8] != undefined){
-				localModelPathWidget.value = node.widgets_values[8];
+			if(node.widgets_values[9] != undefined){
+				localModelPathWidget.value = node.widgets_values[9];
 			}
 			
 			// 初始状态控制：根据 load_local_model 的值决定是否显示 local_model_path

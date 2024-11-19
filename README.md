@@ -18,6 +18,8 @@
 ![slot](./assets/feature2.png)<br>
 <br>
 
+## News
+- Nov 19, 2023: 增加`mask_precision_threshold`参数，控制mask的精度阈值，默认为0.1<br>
 
 ## 安装 
 

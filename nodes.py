@@ -169,6 +169,7 @@ class BiRefNet_Lite:
                 "load_local_model": ("BOOLEAN", {"default": True}),
                 "device": (["auto", "cuda", "cpu", "mps", "xpu", "meta"],{"default": "auto"}),
                 "cutout_func": (["putalpha", "naive", "alpha_matting"],{"default": "putalpha"}),
+                "mask_precision_threshold": ("FLOAT", {"default": 0.1, "min": 0.1, "max": 0.9}),
                 "cached": ("BOOLEAN", {"default": True}),
                 "cpu_size": ("FLOAT",{"default": 0}),
                 "alpha_matting_foreground_threshold": ("INT", {"default": 240}),
@@ -190,8 +191,12 @@ class BiRefNet_Lite:
                           load_local_model,
                           device,
                           cutout_func,
-                          cpu_size,
+                          mask_precision_threshold,
                           cached,
+                          cpu_size,
+                          alpha_matting_foreground_threshold,
+                          alpha_matting_background_threshold,
+                          alpha_matting_erode_size,
                           *args, **kwargs
                           ):
         processed_images = []
@@ -270,12 +275,14 @@ class BiRefNet_Lite:
                 new_im = alpha_matting_cutout(
                     orig_image,
                     pil_im,
-                    foreground_threshold=kwargs.get('alpha_matting_foreground_threshold'),
-                    background_threshold=kwargs.get('alpha_matting_background_threshold'),
-                    erode_structure_size=kwargs.get('alpha_matting_erode_size')
+                    foreground_threshold=alpha_matting_foreground_threshold,
+                    background_threshold=alpha_matting_background_threshold,
+                    erode_structure_size=alpha_matting_erode_size
                 )
             new_im_tensor = pil2tensor(new_im)
             pil_im_tensor = pil2tensor(pil_im)
+            pil_im_tensor[pil_im_tensor <= mask_precision_threshold] = 0.0
+            pil_im_tensor[pil_im_tensor > mask_precision_threshold] = 1.0
             
             processed_images.append(new_im_tensor)
             processed_masks.append(pil_im_tensor)
