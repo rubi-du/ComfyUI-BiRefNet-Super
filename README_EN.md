@@ -18,7 +18,7 @@ Supports putalpha, naive, and alpha_matting cropping methods.
 ![slot](./assets/feature2.png)<br>  
   
 ## News
-- Nov 19, 2023: Add `mask_precision_threshold` parameter to control the accuracy threshold of the mask, default to <br>
+- Nov 19, 2023: Add `mask_precision_threshold` parameter to control the accuracy threshold of the mask, default to 0.1. <br>
 ## Installation   
   
 #### Method 1:  
