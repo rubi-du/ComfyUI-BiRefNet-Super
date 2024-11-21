@@ -1,7 +1,7 @@
 <h1 align="center">ComfyUI-BiRefNet-lite</h1>  
   
 <p align="center">  
-    <br> <a href="README.md">English</a> | <font size=5>中文</font>  
+    <br><font size=5>English</font>  | <a href="README_CN.md">中文</a>
 </p>  
   
 ## Introduction  
