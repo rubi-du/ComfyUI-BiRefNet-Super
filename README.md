@@ -66,4 +66,4 @@ Usage of video_workflow.json<br/>
   
 Thanks to all the authors of the BiRefNet repository [ZhengPeng7/BiRefNet](https://github.com/zhengpeng7/birefnet).  
   
-Some code was referenced from [MoonHugo/ComfyUI-BiRefNet-Hugo](https://github.com/MoonHugo/ComfyUI-BiRefNet-Hugo). Thank you!
+Some code was referenced from [MoonHugo/ComfyUI-BiRefNet-Hugo](https://github.com/MoonHugo/ComfyUI-BiRefNet-Hugo). Thanks!
