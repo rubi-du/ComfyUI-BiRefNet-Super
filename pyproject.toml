@@ -1,5 +1,5 @@
 [project]
-name = "comfyui-BiRefNet-Super"
+name = "comfyui-birefnet-super"
 description = "This repository packages the latest BiRefNet model as a ComfyUI node for use, supporting chunked loading on both CPU and GPU, as well as model caching features."
 version = "1.0.6"
 license = {file = "LICENSE"}
