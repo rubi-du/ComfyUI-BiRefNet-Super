@@ -85,7 +85,7 @@ Model file name should be one of the following:
 ![plot](./assets/demo2.png)  
 
 #### Model download links:<br/>  
-birefnet-genernal: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRefNet-general-epoch_244.onnx<br/>  
+birefnet-genernal: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRefNet-general-epoch_244.onnx<br/>
 birefnet-genernal-lite: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRefNet-general-bb_swin_v1_tiny-epoch_232.onnx<br/> 
 birefnet-portrait: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRefNet-portrait-epoch_150.onnx <br/> 
 birefnet_massive: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRefNet-massive-TR_DIS5K_TR_TEs-epoch_420.onnx<br/> 
