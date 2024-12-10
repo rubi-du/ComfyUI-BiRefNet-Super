@@ -98,6 +98,6 @@ birefnet-cod: https://github.com/danielgatis/rembg/releases/download/v0.0.0/BiRe
   
 Thanks to all the authors of the BiRefNet repository [ZhengPeng7/BiRefNet](https://github.com/zhengpeng7/birefnet).  
   
-Some code was referenced from [MoonHugo/ComfyUI-BiRefNet-Hugo](https://github.com/MoonHugo/ComfyUI-BiRefNet-Hugo). Thank you!
+Some code was referenced from [MoonHugo/ComfyUI-BiRefNet-Hugo](https://github.com/MoonHugo/ComfyUI-BiRefNet-Hugo). Thanks!
 
-Some code was referenced from [danielgatis/rembg](https://github.com/danielgatis/rembg). Thank you!
+Some code was referenced from [danielgatis/rembg](https://github.com/danielgatis/rembg). Thanks!
