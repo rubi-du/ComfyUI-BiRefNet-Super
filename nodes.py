@@ -10,6 +10,7 @@ from scipy.ndimage import binary_erosion
 from pymatting.alpha.estimate_alpha_cf import estimate_alpha_cf
 from pymatting.foreground.estimate_foreground_ml import estimate_foreground_ml
 from pymatting.util.util import stack_images
+from .rmbg.session_factory import new_session
 from folder_paths import models_dir, add_model_folder_path, get_folder_paths
 
 torch.set_float32_matmul_precision(["high", "highest"][0])
@@ -154,7 +155,112 @@ def get_device_by_name(device):
     print("\033[93mUse Device(使用设备):", device, "\033[0m")
     return device
 
+def get_device_provider(device):
+    providers = []
+    cuda_provider_options = {
+        "gpu_mem_limit": 9 * 1024 * 1024 * 1024, # 9GB.
+        "arena_extend_strategy": "kSameAsRequested",
+        "cudnn_conv_use_max_workspace": "0"
+    }
+    if device == 'cuda' and torch.cuda.is_available():
+        providers.append(("CUDAExecutionProvider", cuda_provider_options))
+    
+    if len(providers) == 0:
+        providers.append(("CPUExecutionProvider", {}))
+    
+    return providers
+        
+
 _birefnet_model = None
+_birefnet_model_name = ""
+_birefnet_onnx_model = None
+_birefnet_model_name_onnx = ""
+
+class BiRefNet_onnx:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+                "device": (["cpu", "cuda"],{"default": "cpu"}),
+                "model_name": ([
+                    "birefnet-general",
+                    "birefnet-general-lite",
+                    "birefnet-portrait",
+                    "birefnet-cod",
+                    "birefnet-dis",
+                    "birefnet-hrsod",
+                    "birefnet-massive"
+                ], {"default": "birefnet-general"}),
+                "cutout_func": (["putalpha", "naive", "alpha_matting"],{"default": "putalpha"}),
+                # "cached": ("BOOLEAN", {"default": True}),
+                "alpha_matting_foreground_threshold": ("INT", {"default": 240}),
+                "alpha_matting_background_threshold": ("INT", {"default": 10}),
+                "alpha_matting_erode_size": ("INT", {"default": 10}),
+            },
+        }
+    RETURN_TYPES = ("IMAGE", "MASK",)
+    RETURN_NAMES = ("image", "mask",)
+    FUNCTION = "background_remove"
+    CATEGORY = "🔥BiRefNet"
+    
+    def background_remove(self, 
+                          image, 
+                          device,
+                          model_name,
+                          cutout_func,
+                        #   cached,
+                          alpha_matting_foreground_threshold,
+                          alpha_matting_background_threshold,
+                          alpha_matting_erode_size,
+    ):
+        providers = get_device_provider(device)
+        processed_images = []
+        processed_masks = []
+        global _birefnet_onnx_model, _birefnet_model_name_onnx
+        
+        ## TODO: cache model
+        if _birefnet_onnx_model is not None and _birefnet_model_name_onnx == model_name:
+            session = _birefnet_onnx_model
+            print("Loading from cache...")
+        else:
+            session = new_session(model_name, providers=providers)
+            if _birefnet_onnx_model is not None:
+                _birefnet_onnx_model = None
+                _birefnet_model_name_onnx = ''
+                clear_memory()
+            # if cached:
+            #     _birefnet_onnx_model = session
+            #     _birefnet_model_name_onnx = model_name
+        
+        for image in image:
+            orig_image = tensor2pil(image)
+            masks = session.predict(orig_image)
+            pil_im = masks[0]
+            if cutout_func == 'putalpha':
+                new_im = putalpha_cutout(orig_image, pil_im)
+            elif cutout_func == 'naive':
+                new_im = naive_cutout(orig_image, pil_im)
+            elif cutout_func == 'alpha_matting':
+                new_im = alpha_matting_cutout(
+                    orig_image,
+                    pil_im,
+                    foreground_threshold=alpha_matting_foreground_threshold,
+                    background_threshold=alpha_matting_background_threshold,
+                    erode_structure_size=alpha_matting_erode_size
+                )
+            
+            new_im_tensor = pil2tensor(new_im)
+            pil_im_tensor = pil2tensor(pil_im)
+            processed_images.append(new_im_tensor)
+            processed_masks.append(pil_im_tensor)
+        
+        clear_memory()
+
+        new_ims = torch.cat(processed_images, dim=0)
+        new_masks = torch.cat(processed_masks, dim=0)
+
+        return new_ims, new_masks
 
 class BiRefNet_Lite:
     def __init__(self):
@@ -205,15 +311,18 @@ class BiRefNet_Lite:
         device = get_device_by_name(device)
         birefnet = None
         global _birefnet_model
-        if cached and _birefnet_model is not None:
+        global _birefnet_model_name
+        
+        local_model_path = kwargs.get("local_model_path", model_path)
+        if cached and _birefnet_model is not None and _birefnet_model_name == local_model_path:
             birefnet = _birefnet_model
         else:
             if _birefnet_model is not None:
                 _birefnet_model = None
+                _birefnet_model_name = None
                 clear_memory()
             
             if load_local_model:
-                local_model_path = kwargs.get("local_model_path", model_path)
                 local_model_path = os.path.join(get_folder_paths('birefnet')[-1], local_model_path)
                 # 判断是否开启双卡支持
                 # 获取不同显卡的内存可用量
@@ -244,6 +353,9 @@ class BiRefNet_Lite:
                         print('No need to delete:', e)
                     
                 birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True, **spare_params)
+                if cached:
+                    _birefnet_model = birefnet
+                    _birefnet_model_name = local_model_path
             else:
                 birefnet = AutoModelForImageSegmentation.from_pretrained(
                     "ZhengPeng7/BiRefNet", trust_remote_code=True
@@ -297,10 +409,14 @@ class BiRefNet_Lite:
 
 
 NODE_CLASS_MAPPINGS = {
-    "BiRefNet_Lite": BiRefNet_Lite
+    "BiRefNet_Super": BiRefNet_Lite,
+    "BiRefNet_Lite": BiRefNet_Lite,
+    "BiRefNet_onnx": BiRefNet_onnx
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "BiRefNet_Lite": "🔥BiRefNet_Lite"
+    "BiRefNet_Lite": "🔥BiRefNet_Lite",
+    "BiRefNet_Super": "🔥BiRefNet_Super",
+    "BiRefNet_onnx": "🔥BiRefNet_onnx"
 }

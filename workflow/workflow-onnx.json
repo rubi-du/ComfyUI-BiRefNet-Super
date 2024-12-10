@@ -1,0 +1,231 @@
+{
+  "last_node_id": 12,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 12,
+      "type": "PreviewImage",
+      "pos": {
+        "0": 1554,
+        "1": 515
+      },
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "pos": {
+        "0": 526,
+        "1": 30
+      },
+      "size": {
+        "0": 513.1171875,
+        "1": 501.84765625
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "测试截图.png",
+        "image"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": {
+        "0": 1533,
+        "1": -18
+      },
+      "size": {
+        "0": 405.41015625,
+        "1": 454.2578125
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 15
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 10,
+      "type": "BiRefNet_onnx",
+      "pos": {
+        "0": 1118,
+        "1": 116
+      },
+      "size": {
+        "0": 315,
+        "1": 222
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            16
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BiRefNet_onnx"
+      },
+      "widgets_values": [
+        "cpu",
+        "birefnet-general",
+        "putalpha",
+        240,
+        10,
+        10
+      ]
+    },
+    {
+      "id": 11,
+      "type": "MaskToImage",
+      "pos": {
+        "0": 1294,
+        "1": 511
+      },
+      "size": {
+        "0": 264.5999755859375,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [
+      14,
+      6,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      15,
+      10,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      10,
+      1,
+      11,
+      0,
+      "MASK"
+    ],
+    [
+      17,
+      11,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8390545288824016,
+      "offset": [
+        -524.8041373279959,
+        67.63914579313717
+      ]
+    }
+  },
+  "version": 0.4
+}
