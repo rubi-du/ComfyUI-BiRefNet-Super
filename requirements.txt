@@ -3,3 +3,6 @@ timm
 pymatting
 scikit-image
 scipy
+pooch
+onnxruntime>=1.17.1
+onnxruntime-gpu>=1.17.1
