@@ -1,5 +1,6 @@
 from transformers import AutoModelForImageSegmentation, AutoConfig
 from transformers.dynamic_module_utils import get_class_from_dynamic_module
+from transformers.models.auto.auto_factory import add_generation_mixin_to_remote_model
 import torch
 from torchvision import transforms
 import numpy as np
@@ -147,7 +148,7 @@ def get_device_by_name(device):
             if torch.cuda.is_available():
                 device = "cuda"
             elif torch.backends.mps.is_available():
-                device = "mps"
+                device = "cpu"
             elif torch.xpu.is_available():
                 device = "xpu"
         except:
@@ -352,7 +353,12 @@ class BiRefNet_Lite:
                     except Exception as e:
                         print('No need to delete:', e)
                     
-                birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True, **spare_params)
+                AutoModelForImageSegmentation.register(config.__class__, model_class, exist_ok=True)
+                model_class = add_generation_mixin_to_remote_model(model_class)
+                birefnet = model_class.from_pretrained(
+                    local_model_path, config=config, **spare_params
+                )
+                # birefnet = AutoModelForImageSegmentation.from_pretrained(local_model_path,trust_remote_code=True, **spare_params)
                 if cached:
                     _birefnet_model = birefnet
                     _birefnet_model_name = local_model_path
